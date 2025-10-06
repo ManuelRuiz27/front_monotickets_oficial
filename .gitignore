@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Build artifacts
+.next/
+**/.next/
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+.turbo/
+.turbo-cache/
+
+# Logs and diagnostics
+*.log
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+*.pid
+*.seed
+*.tsbuildinfo
+coverage/
+**/coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sw?

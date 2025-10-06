@@ -1,0 +1,19 @@
+{
+  "name": "design-tokens",
+  "version": "1.0.0",
+  "description": "Design tokens for the Monotickets ecosystem, providing a single source of truth for colors, typography, and spacing.",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./index": "./index.ts"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "design-tokens",
+    "monotickets"
+  ],
+  "author": "",
+  "license": "ISC"
+}

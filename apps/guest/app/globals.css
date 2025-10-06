@@ -1,0 +1,11 @@
+/*
+  Global styles for the guest module.  Pull in Tailwind’s base, component,
+  and utility styles.  Additional global overrides can be added below.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-gray-900;
+}

@@ -1,0 +1,48 @@
+services:
+  admin:
+    build:
+      context: .
+      args:
+        APP_NAME: admin
+        APP_DIR: apps/admin
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    ports:
+      - "${ADMIN_PORT:-3000}:3000"
+
+  staff:
+    build:
+      context: .
+      args:
+        APP_NAME: staff
+        APP_DIR: apps/staff
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    ports:
+      - "${STAFF_PORT:-3001}:3000"
+
+  guest:
+    build:
+      context: .
+      args:
+        APP_NAME: guest
+        APP_DIR: apps/guest
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    ports:
+      - "${GUEST_PORT:-3002}:3000"
+
+  superadmin:
+    build:
+      context: .
+      args:
+        APP_NAME: superadmin
+        APP_DIR: apps/superadmin
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+    ports:
+      - "${SUPERADMIN_PORT:-3003}:3000"

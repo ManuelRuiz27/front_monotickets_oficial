@@ -1,0 +1,16 @@
+# Dependencies
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+
+# Build artifacts
+apps/*/.next
+apps/*/out
+.turbo
+
+# Local configuration and VCS
+.git
+.gitignore
+.vscode
+.env
+.env.*

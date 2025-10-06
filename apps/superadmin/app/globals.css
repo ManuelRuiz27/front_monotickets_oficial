@@ -1,0 +1,12 @@
+/*
+  Global styles for the Super Admin app.  Tailwind's directives are
+  imported here; additional global styles can be added below.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles */
+body {
+  @apply text-gray-900;
+}
