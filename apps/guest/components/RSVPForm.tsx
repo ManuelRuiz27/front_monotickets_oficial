@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import { Button, Card, useToast } from '@ui/index';
 import { api } from '@api/monotickets-sdk';
@@ -6,9 +7,8 @@ import confetti from 'canvas-confetti';
 import React from 'react';
 
 /**
- * A form that allows guests to confirm or decline attendance.  Upon
- * submission it sends the response to the API and shows a success
- * message along with a confetti animation for positive responses.
+ * A form that allows guests to confirm or decline attendance using the updated
+ * visual language.  Success feedback includes confetti for positive responses.
  */
 export const RSVPForm = () => {
   const [response, setResponse] = useState<'none' | 'yes' | 'no'>('none');
@@ -20,7 +20,12 @@ export const RSVPForm = () => {
     try {
       await api.post('/guest/rsvp', { status });
       setResponse(status);
-      if (status === 'yes') confetti({ particleCount: 120, spread: 70 });
+      if (status === 'yes') {
+        confetti({ particleCount: 160, spread: 70, origin: { y: 0.7 } });
+        showToast('¡Tu asistencia quedó confirmada! 🎟️', 'success');
+      } else {
+        showToast('Gracias por avisarnos, te esperaremos en la próxima.', 'info');
+      }
     } catch {
       showToast('Error enviando RSVP', 'error');
     } finally {
@@ -30,20 +35,30 @@ export const RSVPForm = () => {
 
   if (response !== 'none')
     return (
-      <Card>
-        <h2 className="text-xl font-bold mb-2">
-          {response === 'yes'
-            ? '🎉 ¡Nos alegra verte allí!'
-            : '😔 Lamentamos que no puedas asistir.'}
+      <Card className="space-y-4 text-center">
+        <h2 className="text-2xl font-semibold text-[var(--color-text-strong)]">
+          {response === 'yes' ? '🎉 ¡Nos alegra verte allí!' : '😔 Lamentamos que no puedas asistir.'}
         </h2>
-        <p>Gracias por responder tu invitación.</p>
+        <p className="text-sm leading-6 text-[var(--color-text)]">
+          {response === 'yes'
+            ? 'Te enviaremos tu pase digital y recomendaciones personalizadas en los próximos minutos.'
+            : 'Tu lugar se liberará para otra persona interesada. ¡Gracias por hacérnoslo saber!'}
+        </p>
+        <Button variant="secondary" onClick={() => setResponse('none')}>
+          Modificar mi respuesta
+        </Button>
       </Card>
     );
 
   return (
-    <Card>
-      <h2 className="text-xl font-bold mb-4">Confirmar asistencia</h2>
-      <div className="flex gap-4">
+    <Card className="space-y-6">
+      <header className="space-y-2 text-center">
+        <h2 className="text-2xl font-semibold text-[var(--color-text-strong)]">Confirmar asistencia</h2>
+        <p className="text-sm text-[var(--color-text-muted)]">
+          Cuéntanos si podremos contar contigo. Podrás actualizar tu respuesta cuando quieras.
+        </p>
+      </header>
+      <div className="flex flex-wrap justify-center gap-4">
         <Button onClick={() => sendRSVP('yes')} disabled={loading}>
           Asistiré
         </Button>

@@ -3,6 +3,13 @@
 import React, { useEffect } from 'react';
 import { useToast } from '../hooks/useToast';
 
+const typeStyles = {
+  success: 'bg-[rgba(63,201,148,0.92)] text-white',
+  error: 'bg-[rgba(242,95,92,0.92)] text-white',
+  warning: 'bg-[rgba(255,173,79,0.92)] text-[#0d1b2a]',
+  info: 'bg-[rgba(75,163,255,0.92)] text-white',
+};
+
 export const Toast = () => {
   const { message, type, isOpen, hideToast } = useToast();
 
@@ -10,7 +17,7 @@ export const Toast = () => {
     if (isOpen) {
       const timer = setTimeout(() => {
         hideToast();
-      }, 3000);
+      }, 3200);
       return () => clearTimeout(timer);
     }
   }, [isOpen, hideToast]);
@@ -19,16 +26,15 @@ export const Toast = () => {
     return null;
   }
 
-  const colors = {
-    success: 'bg-green-600/90',
-    error: 'bg-red-600/90',
-    warning: 'bg-yellow-600/90',
-    info: 'bg-blue-600/90',
-  };
-
   return (
-    <div className="fixed bottom-4 right-4">
-      <div className={`${colors[type]} text-white rounded-lg shadow-lg px-4 py-3`}>{message}</div>
+    <div className="pointer-events-none fixed bottom-6 right-6 z-[999] flex max-w-sm justify-end">
+      <div
+        role="status"
+        aria-live="assertive"
+        className={`glass-popover pointer-events-auto flex-1 rounded-2xl px-5 py-4 text-sm font-medium shadow-soft transition-base ${typeStyles[type]}`}
+      >
+        {message}
+      </div>
     </div>
   );
 };

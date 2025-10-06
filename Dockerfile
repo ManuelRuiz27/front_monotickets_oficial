@@ -1,50 +1,37 @@
-# Base environment with pnpm enabled
+# Production-ready image for the Monotickets frontend (guest app)
 FROM node:20-alpine AS base
 WORKDIR /app
-RUN apk add --no-cache libc6-compat
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@10.18.0 --activate
+RUN apk add --no-cache libc6-compat \
+  && corepack enable \
+  && corepack prepare pnpm@10.18.0 --activate
 
-# Install dependencies once to leverage Docker layer caching
+# Install dependencies with pnpm using workspace filters for the guest app
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.json ./
-COPY apps ./apps
 COPY packages ./packages
-RUN pnpm install --frozen-lockfile
+COPY apps/guest/package.json ./apps/guest/package.json
+RUN pnpm install --filter guest... --frozen-lockfile
 
-# Build the selected application
+# Build the Next.js application with standalone output
 FROM base AS builder
-ARG APP_NAME=admin
-ARG APP_DIR=apps/admin
 ARG NEXT_PUBLIC_API_URL=https://api.monotickets.com
-ENV NODE_ENV=production
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-ENV APP_NAME=${APP_NAME}
-ENV APP_DIR=${APP_DIR}
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN pnpm install --frozen-lockfile
-RUN pnpm --filter ${APP_NAME}... build
+RUN pnpm install --filter guest... --frozen-lockfile
+RUN pnpm --filter guest... build
 
-# Final runtime image
-FROM base AS runner
-ARG APP_NAME=admin
-ARG APP_DIR=apps/admin
-ARG NEXT_PUBLIC_API_URL=https://api.monotickets.com
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-ENV APP_NAME=${APP_NAME}
-ENV APP_DIR=${APP_DIR}
+# Final runtime image using the standalone server
+FROM node:20-alpine AS runner
 WORKDIR /app
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/turbo.json ./turbo.json
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages ./packages
-COPY --from=builder /app/apps/${APP_DIR} ./apps/${APP_DIR}
+ENV NODE_ENV=production
+ENV PORT=3000
+ARG NEXT_PUBLIC_API_URL=https://api.monotickets.com
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+COPY --from=builder /app/apps/guest/.next/standalone ./
+COPY --from=builder /app/apps/guest/.next/static ./apps/guest/.next/static
+COPY --from=builder /app/apps/guest/public ./apps/guest/public
 EXPOSE 3000
-CMD ["sh", "-c", "pnpm --filter \"$APP_NAME\" start"]
+CMD ["node", "apps/guest/server.js"]

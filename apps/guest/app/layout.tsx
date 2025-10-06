@@ -1,24 +1,23 @@
 import './globals.css';
-import { tokens } from '@tokens/index';
 import React from 'react';
 import { Toast } from '@ui/index';
+import { ThemeProvider } from '../components/ThemeProvider';
+import { AppShell } from '../components/AppShell';
 
-/**
- * Root layout for the guest application.  Centers the content on the page
- * and applies a minimum height to fill the viewport.  Global fonts and
- * background colors are pulled from the design tokens.
- */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body
+        className="antialiased"
         style={{
-          fontFamily: tokens.typography.fontFamily,
-          backgroundColor: tokens.colors.background,
+          fontFamily: 'var(--font-body)',
+          backgroundColor: 'var(--color-background)',
         }}
-        className="min-h-screen flex flex-col items-center justify-center p-6"
       >
-        {children}
+        <ThemeProvider>
+          <AppShell>{children}</AppShell>
+          <Toast />
+        </ThemeProvider>
       </body>
     </html>
   );

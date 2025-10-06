@@ -1,35 +1,78 @@
-import React from 'react';
+import React, { cloneElement, isValidElement } from 'react';
 import { Toast } from './components/Toast';
 
-type ButtonProps = {
-  children: React.ReactNode;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary';
-  disabled?: boolean;
+  asChild?: boolean;
 };
 
-// A simple button component with two variants.  Accepts children as the
-// button label, an optional onClick handler, and an optional variant prop
-// which defaults to "primary".  Styles are based on Tailwind CSS utility
-// classes, but can be overridden or extended via the parent application.
-export const Button = ({ children, onClick, variant = 'primary', disabled }: ButtonProps) => {
-  const base = 'px-4 py-2 rounded font-semibold transition-all';
-  const styles =
-    variant === 'primary'
-      ? 'bg-blue-600 text-white hover:bg-blue-700'
-      : 'bg-gray-200 text-gray-900 hover:bg-gray-300';
+const merge = (...classes: (string | undefined | false)[]) => classes.filter(Boolean).join(' ');
+
+// Primary and secondary button styles aligned with the refreshed UI system.
+export const Button = ({
+  children,
+  onClick,
+  variant = 'primary',
+  disabled,
+  type = 'button',
+  className,
+  asChild = false,
+  ...rest
+}: ButtonProps) => {
+  const base =
+    'inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-semibold tracking-wide transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-[rgba(7,17,32,0.35)] disabled:cursor-not-allowed disabled:opacity-60';
+  const variants: Record<'primary' | 'secondary', string> = {
+    primary:
+      'bg-[var(--color-accent)] text-[var(--color-text-strong)] shadow-soft hover:bg-[var(--color-accent-strong)] hover:shadow-[0_20px_40px_rgba(75,163,255,0.45)]',
+    secondary:
+      'border border-[var(--color-accent)] bg-transparent text-[var(--color-accent)] hover:bg-[rgba(75,163,255,0.12)] hover:text-[var(--color-text-strong)]',
+  };
+  const mergedClassName = merge(base, variants[variant], className);
+
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement, {
+      className: merge(mergedClassName, (children.props as { className?: string }).className),
+      onClick,
+      ...rest,
+    } as Record<string, unknown>);
+  }
+
   return (
-    <button onClick={onClick} className={`${base} ${styles}`} disabled={disabled}>
+    <button
+      type={type}
+      onClick={onClick}
+      className={mergedClassName}
+      disabled={disabled}
+      {...rest}
+    >
       {children}
     </button>
   );
 };
 
-// A simple card component for wrapping content.  Uses a white background,
-// subtle shadow, and rounded corners.  Children are rendered inside.
-export const Card = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-4 bg-white shadow-md rounded-lg border border-gray-100">{children}</div>
-);
+type CardProps<T extends React.ElementType = 'section'> = {
+  children: React.ReactNode;
+  className?: string;
+  component?: T;
+} & Omit<React.ComponentPropsWithoutRef<T>, 'children' | 'className'>;
+
+// Glassmorphism inspired card that adapts to light/dark themes via CSS variables.
+export const Card = <T extends React.ElementType = 'section'>({
+  children,
+  className,
+  component,
+  ...rest
+}: CardProps<T>) => {
+  const Component = (component || 'section') as React.ElementType;
+  return (
+    <Component
+      {...(rest as Record<string, unknown>)}
+      className={merge('glass-card rounded-3xl border backdrop-blur-xl px-6 py-6 text-[var(--color-text)]', className)}
+    >
+      {children}
+    </Component>
+  );
+};
 
 export { Toast };
 export * from './hooks';
