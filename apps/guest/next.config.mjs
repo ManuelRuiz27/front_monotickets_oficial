@@ -4,6 +4,7 @@ const nextConfig = {
   // Transpile only the packages that need compilation.  The utils package
   // remains plain JS and doesn’t require transpilation here.
   transpilePackages: ['ui', 'api', 'design-tokens'],
+  output: 'standalone',
 };
 
 export default nextConfig;
