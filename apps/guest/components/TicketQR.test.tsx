@@ -35,6 +35,6 @@ describe('Ticket QR', () => {
   it('debería llamar a showToast al hacer clic en "Agregar al Wallet"', () => {
     render(<TicketQR id="12345" />);
     fireEvent.click(screen.getByText('Agregar al Wallet'));
-    expect(mockShowToast).toHaveBeenCalledWith('Próximamente...', 'info');
+    expect(mockShowToast).toHaveBeenCalledWith('Pronto podrás agregar tus pases a Apple/Google Wallet.', 'info');
   });
 });

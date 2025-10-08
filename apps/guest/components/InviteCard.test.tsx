@@ -14,13 +14,13 @@ describe('Tarjeta de Invitación', () => {
     render(<InviteCard invite={invite} />);
     expect(screen.getByText('Boda de Ana y Juan')).toBeInTheDocument();
     expect(screen.getByText('Nos complace invitarte a nuestra boda.')).toBeInTheDocument();
-    expect(screen.getByText('📅 Sábado, 25 de Diciembre de 2025')).toBeInTheDocument();
-    expect(screen.getByText('📍 Salón de Fiestas "El Roble"')).toBeInTheDocument();
+    expect(screen.getByText('Salón de Fiestas "El Roble"')).toBeInTheDocument();
+    expect(screen.getByText('Sábado, 25 de Diciembre de 2025')).toBeInTheDocument();
   });
 
   it('debería tener un enlace al a la página de RSVP', () => {
     render(<InviteCard invite={invite} />);
-    const link = screen.getByRole('link', { name: 'Confirmar Asistencia' });
+    const link = screen.getByRole('link', { name: 'Confirmar asistencia' });
     expect(link).toHaveAttribute('href', '/rsvp');
   });
 });

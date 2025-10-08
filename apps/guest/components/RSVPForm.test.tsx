@@ -44,7 +44,9 @@ describe('Formulario de RSVP', () => {
     expect(api.post).toHaveBeenCalledWith('/guest/rsvp', { status: 'yes' });
     expect(confetti).toHaveBeenCalled();
     expect(screen.getByText('🎉 ¡Nos alegra verte allí!')).toBeInTheDocument();
-    expect(screen.getByText('Gracias por responder tu invitación.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Te enviaremos tu pase digital y recomendaciones personalizadas en los próximos minutos.')
+    ).toBeInTheDocument();
   });
 
   it('debería llamar a la API con "no" y mostrar un mensaje de éxito al hacer clic en "No podré ir"', async () => {
@@ -58,7 +60,9 @@ describe('Formulario de RSVP', () => {
     expect(api.post).toHaveBeenCalledWith('/guest/rsvp', { status: 'no' });
     expect(confetti).not.toHaveBeenCalled();
     expect(screen.getByText('😔 Lamentamos que no puedas asistir.')).toBeInTheDocument();
-    expect(screen.getByText('Gracias por responder tu invitación.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Tu lugar se liberará para otra persona interesada. ¡Gracias por hacérnoslo saber!')
+    ).toBeInTheDocument();
   });
 
   it('debería llamar a showToast con un error si la API falla', async () => {
