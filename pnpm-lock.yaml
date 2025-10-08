@@ -117,6 +117,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.3
         version: 3.4.18
+      ui:
+        specifier: workspace:*
+        version: link:../../packages/ui
     devDependencies:
       '@types/canvas-confetti':
         specifier: ^1.9.0

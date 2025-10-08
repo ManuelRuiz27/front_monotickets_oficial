@@ -11,7 +11,10 @@ RUN apk add --no-cache libc6-compat \
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.json ./
 COPY packages ./packages
+COPY apps/admin/package.json ./apps/admin/package.json
 COPY apps/guest/package.json ./apps/guest/package.json
+COPY apps/staff/package.json ./apps/staff/package.json
+COPY apps/superadmin/package.json ./apps/superadmin/package.json
 RUN pnpm install --filter guest... --frozen-lockfile
 
 # Build the Next.js application with standalone output
