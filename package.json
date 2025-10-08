@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "start:all": "node scripts/start-all.js",
     "lint": "turbo lint",
     "format": "prettier --write .",
     "test": "jest",

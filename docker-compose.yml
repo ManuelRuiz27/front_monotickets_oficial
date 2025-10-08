@@ -6,5 +6,12 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.monotickets.com}
+      ADMIN_PORT: ${ADMIN_PORT:-3000}
+      STAFF_PORT: ${STAFF_PORT:-3001}
+      GUEST_PORT: ${GUEST_PORT:-3002}
+      SUPERADMIN_PORT: ${SUPERADMIN_PORT:-3003}
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${ADMIN_PORT:-3000}:${ADMIN_PORT:-3000}"
+      - "${STAFF_PORT:-3001}:${STAFF_PORT:-3001}"
+      - "${GUEST_PORT:-3002}:${GUEST_PORT:-3002}"
+      - "${SUPERADMIN_PORT:-3003}:${SUPERADMIN_PORT:-3003}"

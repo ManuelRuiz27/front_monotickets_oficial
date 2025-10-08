@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className="dark">
       <body
-        style={{ fontFamily: tokens.typography.fontFamily, background: '#0B0F1A' }}
+        style={{ fontFamily: tokens.typography.bodyFont, background: '#0B0F1A' }}
         className="text-white"
       >
         <div className="min-h-screen flex flex-col">

@@ -49,7 +49,7 @@ export const Button = ({
 };
 
 type CardProps<T extends React.ElementType = 'section'> = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   component?: T;
 } & Omit<React.ComponentPropsWithoutRef<T>, 'children' | 'className'>;

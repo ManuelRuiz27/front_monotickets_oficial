@@ -33,6 +33,17 @@ type RoleDefinition = {
   }>;
 };
 
+const SHARED_LOGIN_ENDPOINT = '/admin/login';
+const SHARED_CREDENTIAL_FIELDS: RoleDefinition['fields'] = [
+  {
+    id: 'email',
+    label: 'Correo de acceso',
+    type: 'email',
+    placeholder: 'usuario@monotickets.com',
+  },
+  { id: 'password', label: 'Contraseña', type: 'password', placeholder: '••••••' },
+];
+
 const ROLE_DEFINITIONS: RoleDefinition[] = [
   {
     role: 'superadmin',
@@ -48,21 +59,15 @@ const ROLE_DEFINITIONS: RoleDefinition[] = [
     role: 'organizer',
     title: 'Administrador de eventos',
     description: 'Gestiona eventos, invitados y reportes en tiempo real.',
-    endpoint: '/admin/login',
-    fields: [
-      { id: 'email', label: 'Correo de acceso', type: 'email', placeholder: 'planner@evento.com' },
-      { id: 'password', label: 'Contraseña', type: 'password', placeholder: '••••••' },
-    ],
+    endpoint: SHARED_LOGIN_ENDPOINT,
+    fields: SHARED_CREDENTIAL_FIELDS,
   },
   {
     role: 'staff',
     title: 'Staff / Control de Accesos',
-    description: 'Escaneo QR, conteo de aforo y sincronización offline.',
-    endpoint: '/staff/login',
-    fields: [
-      { id: 'user', label: 'Usuario', placeholder: 'Puesto o dispositivo' },
-      { id: 'pin', label: 'PIN o token temporal', type: 'password', placeholder: '0000' },
-    ],
+    description: 'Accede con las mismas credenciales del panel para sincronizar escaneos y aforos.',
+    endpoint: SHARED_LOGIN_ENDPOINT,
+    fields: SHARED_CREDENTIAL_FIELDS,
   },
 ];
 
@@ -104,6 +109,7 @@ export function UnifiedLoginForm({ defaultRole = 'organizer', redirects }: Unifi
       for (const field of role.fields) {
         payload[field.id] = formState[field.id] || '';
       }
+      payload.role = role.role;
       const { data } = await api.post(role.endpoint, payload);
       if (!data?.token) {
         throw new Error('Respuesta inválida');

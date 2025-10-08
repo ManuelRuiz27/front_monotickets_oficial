@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body
         style={{
-          fontFamily: tokens.typography.fontFamily,
+          fontFamily: tokens.typography.bodyFont,
           backgroundColor: tokens.colors.background,
         }}
       >

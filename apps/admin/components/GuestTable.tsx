@@ -34,13 +34,23 @@ export const GuestTable = () => {
     Papa.parse(file, {
       header: true,
       complete: (results) => {
-        const parsed = (results.data as Partial<Guest>[]).map((row) => ({
-          name: row.name ?? 'Invitado',
-          email: row.email ?? 'sin-correo@monotickets.com',
-          passType: row.passType ?? 'General',
-          status: (row.status as Guest['status']) ?? 'pendiente',
-          sent: row.sent === true || row.sent === 'true',
-        }));
+        const parsed = (results.data as Partial<Guest>[]).map((row) => {
+          const sentValue = row.sent as unknown;
+          const sent =
+            typeof sentValue === 'boolean'
+              ? sentValue
+              : typeof sentValue === 'string'
+                ? sentValue.toLowerCase() === 'true'
+                : false;
+
+          return {
+            name: row.name ?? 'Invitado',
+            email: row.email ?? 'sin-correo@monotickets.com',
+            passType: row.passType ?? 'General',
+            status: (row.status as Guest['status']) ?? 'pendiente',
+            sent,
+          };
+        });
         setGuests(parsed);
         showToast(`Importados ${parsed.length} invitados`, 'success');
       },

@@ -7,14 +7,17 @@
     "start": "next start"
   },
   "dependencies": {
+    "api": "workspace:*",
     "axios": "^1.7.3",
     "framer-motion": "^11.3.0",
+    "hooks": "workspace:*",
     "next": "14.2.4",
     "qrcode.react": "^3.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "tailwindcss": "^3.4.3",
-    "ui": "workspace:*"
+    "ui": "workspace:*",
+    "utils": "workspace:*"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
