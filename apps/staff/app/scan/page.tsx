@@ -6,6 +6,7 @@ import { useOfflineQueue } from '../../lib/offlineQueue';
 import InsidePanel from '../../components/InsidePanel';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { getSession } from '@utils/auth';
 
 /**
  * Main scanning page.  Shows the scanner, a panel with live occupancy
@@ -16,7 +17,8 @@ export default function ScanPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!localStorage.getItem('staff_token')) {
+    const session = getSession();
+    if (!session || session.role !== 'staff') {
       router.replace('/login');
     }
   }, [router]);

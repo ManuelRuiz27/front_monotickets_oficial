@@ -1,6 +1,7 @@
 'use client';
 import { create } from 'zustand';
 import { api } from '@api/monotickets-sdk';
+import { getSession } from '@utils/auth';
 import { CheckinPayload, getAll, remove, upsert } from './idb';
 
 type Toast = { kind: 'success' | 'warn' | 'error' | 'info'; message: string };
@@ -24,8 +25,8 @@ export const useOfflineQueue = create<Store>((set, get) => ({
     set({ pending: list.length });
   },
   syncNow: async () => {
-    const token = localStorage.getItem('staff_token');
-    if (!token) {
+    const session = getSession();
+    if (!session?.token || session.role !== 'staff') {
       set({ toast: { kind: 'error', message: 'Sin sesión, no se puede sincronizar.' } });
       return;
     }

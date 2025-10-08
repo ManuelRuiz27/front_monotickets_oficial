@@ -25,23 +25,23 @@ describe('Formulario de Feedback', () => {
   it('debería renderizar el formulario correctamente', () => {
     render(<FeedbackForm />);
     expect(screen.getByText('Feedback del evento')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Escribe tu comentario...')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Cuéntanos qué te gustó o qué podríamos mejorar...')).toBeInTheDocument();
   });
 
   it('debería permitir al usuario seleccionar una calificación', () => {
     render(<FeedbackForm />);
-    fireEvent.click(screen.getByLabelText('3 star rating'));
+    fireEvent.click(screen.getByLabelText('3 de 5 estrellas'));
     // After clicking the 3rd star, the first 3 stars should be yellow
-    expect(screen.getByLabelText('1 star rating')).toHaveClass('text-yellow-400');
-    expect(screen.getByLabelText('2 star rating')).toHaveClass('text-yellow-400');
-    expect(screen.getByLabelText('3 star rating')).toHaveClass('text-yellow-400');
-    expect(screen.getByLabelText('4 star rating')).not.toHaveClass('text-yellow-400');
-    expect(screen.getByLabelText('5 star rating')).not.toHaveClass('text-yellow-400');
+    expect(screen.getByLabelText('1 de 5 estrellas')).toHaveClass('text-[var(--color-accent-strong)]');
+    expect(screen.getByLabelText('2 de 5 estrellas')).toHaveClass('text-[var(--color-accent-strong)]');
+    expect(screen.getByLabelText('3 de 5 estrellas')).toHaveClass('text-[var(--color-accent-strong)]');
+    expect(screen.getByLabelText('4 de 5 estrellas')).not.toHaveClass('text-[var(--color-accent-strong)]');
+    expect(screen.getByLabelText('5 de 5 estrellas')).not.toHaveClass('text-[var(--color-accent-strong)]');
   });
 
   it('debería permitir al usuario escribir en el área de texto', () => {
     render(<FeedbackForm />);
-    const textarea = screen.getByPlaceholderText('Escribe tu comentario...') as HTMLTextAreaElement;
+    const textarea = screen.getByPlaceholderText('Cuéntanos qué te gustó o qué podríamos mejorar...') as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: 'Muy buen evento!' } });
     expect(textarea.value).toBe('Muy buen evento!');
   });
@@ -49,20 +49,28 @@ describe('Formulario de Feedback', () => {
   it('debería llamar a la API y mostrar un mensaje de agradecimiento al enviar el formulario', async () => {
     (api.post as jest.Mock).mockResolvedValue({});
     render(<FeedbackForm />);
-    fireEvent.click(screen.getByLabelText('4 star rating'));
-    fireEvent.change(screen.getByPlaceholderText('Escribe tu comentario...'), { target: { value: 'Excelente!' } });
-    fireEvent.click(screen.getByText('Enviar'));
+    fireEvent.click(screen.getByLabelText('4 de 5 estrellas'));
+    fireEvent.change(screen.getByPlaceholderText('Cuéntanos qué te gustó o qué podríamos mejorar...'), {
+      target: { value: 'Excelente!' },
+    });
+    fireEvent.click(screen.getByText('Enviar opinión'));
 
     await screen.findByText('¡Gracias por tus comentarios! 💬');
 
     expect(api.post).toHaveBeenCalledWith('/guest/feedback', { rating: 4, message: 'Excelente!' });
-    expect(screen.getByText('Tu opinión nos ayuda a mejorar futuras experiencias.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Tu opinión nos ayuda a diseñar experiencias inolvidables. Revisa tu correo para recibir sorpresas exclusivas.')
+    ).toBeInTheDocument();
   });
 
   it('debería llamar a showToast con un error si la API falla', async () => {
     (api.post as jest.Mock).mockRejectedValue(new Error('API Error'));
     render(<FeedbackForm />);
-    fireEvent.click(screen.getByText('Enviar'));
+    fireEvent.click(screen.getByLabelText('2 de 5 estrellas'));
+    fireEvent.change(screen.getByPlaceholderText('Cuéntanos qué te gustó o qué podríamos mejorar...'), {
+      target: { value: 'Necesita mejoras' },
+    });
+    fireEvent.click(screen.getByText('Enviar opinión'));
 
     await new Promise(resolve => setTimeout(resolve, 0)); // Wait for the async function to finish
 

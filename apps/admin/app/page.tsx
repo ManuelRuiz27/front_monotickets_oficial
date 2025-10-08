@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getSession } from '@utils/auth';
 
 /**
  * Root page for the admin app.  It redirects users to the appropriate
@@ -11,8 +12,8 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    if (token) {
+    const session = typeof window !== 'undefined' ? getSession() : null;
+    if (session?.token) {
       router.replace('/dashboard');
     } else {
       router.replace('/login');

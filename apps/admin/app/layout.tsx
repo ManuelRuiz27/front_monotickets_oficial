@@ -32,6 +32,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/guests" className="hover:underline">
                 Invitados
               </Link>
+              <Link href="/templates" className="hover:underline">
+                Plantillas
+              </Link>
+              <Link href="/checkin" className="hover:underline">
+                Check-in Live
+              </Link>
+              <Link href="/credits" className="hover:underline">
+                Créditos
+              </Link>
               <Link href="/reports" className="hover:underline">
                 Reportes
               </Link>

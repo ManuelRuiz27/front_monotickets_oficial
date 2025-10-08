@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getSession } from '@utils/auth';
 
 // Configure a shared Axios instance for the Monotickets API.  The base URL can be
 // overridden via the NEXT_PUBLIC_API_URL environment variable; otherwise it
@@ -13,8 +14,8 @@ export const api = axios.create({
 // when running in the browser.  This keeps authentication simple and avoids
 // sprinkling token retrieval throughout your application code.
 api.interceptors.request.use((config) => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  const session = typeof window !== 'undefined' ? getSession() : null;
+  if (session?.token) config.headers.Authorization = `Bearer ${session.token}`;
   return config;
 });
 
